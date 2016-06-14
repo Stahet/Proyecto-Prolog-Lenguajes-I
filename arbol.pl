@@ -25,27 +25,25 @@ maximoLista([X|Xs],X):- maximoLista(Xs,Y), X >=Y.
 maximoLista([X|Xs],Y):- maximoLista(Xs,Y), Y > X.
 
 bienEtiquetadoAuxiliar(nodo(A,[]),[],[A]):-!.
-bienEtiquetadoAuxiliar(nodo(A,[arista(E,nodo(B,L))|XS]),[E|Aristas2],Nodos2):-
-			E is A-B,
-			bienEtiquetadoAuxiliar(nodo(B,L),Aristas,Nodos),
-			bienEtiquetadoAuxiliar(nodo(A,XS),Aristas1,Nodos1),
-			append(Aristas,Aristas1,Aristas2),
-			append(Nodos,Nodos1,Nodos2).
+bienEtiquetadoAuxiliar(nodo(A,[arista(E,nodo(B,L))|XS]),[E|AristasAcum],NodosAcum):-
+            E is abs(A-B),
+            bienEtiquetadoAuxiliar(nodo(B,L),Aristas,Nodos),
+            bienEtiquetadoAuxiliar(nodo(A,XS),Aristas1,Nodos1),
+            append(Aristas,Aristas1,AristasAcum),
+            append(Nodos,Nodos1,NodosAcum).
 
 /* PREDICADO BIEN ETIQUETADO */
 
-bienEtiquetado(nodo(_,[])):-!.
 bienEtiquetado(Arbol):-
-			bienEtiquetadoAuxiliar(Arbol,Aristas,Nodos),
-			noRepetidos(Aristas),
-			noRepetidos(Nodos),
-			maximoLista(Aristas,MaxDeAristas),
-			lenght(Aristas,LongitudAristas),
-			MaxDeAristas is LongitudAristas,
-			maximoLista(Nodos,MaxDeNodos),
-			lenght(Nodos,LongitudNodos),
-			MaxDeNodos is LongitudNodos.
-
+            bienEtiquetadoAuxiliar(Arbol,Aristas,Nodos),
+            noRepetidos(Aristas),
+            noRepetidos(Nodos),
+            maximoLista(Aristas,MaxDeAristas),
+            lenght(Aristas,LongitudAristas),
+            MaxDeAristas is LongitudAristas,
+            maximoLista(Nodos,MaxDeNodos),
+            lenght(Nodos,LongitudNodos),
+            MaxDeNodos is LongitudNodos.
 
 
 /* PREDICADO ESQUELETO */
@@ -78,4 +76,5 @@ generarNumeros(N,[N|Xs]):- N2 is N-1,generarNumeros(N2,Xs).
 
 pertenece(X,[X|_]):-!.
 pertenece(X,[_|YS]):- pertenece(X,YS).
+
 
