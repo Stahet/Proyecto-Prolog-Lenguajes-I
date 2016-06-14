@@ -65,30 +65,17 @@ esqueleto(N,R,esq([X|[Y|ZS]])):-
 			esqueleto(N2,R,esq([Y|ZS])).
 
 
-
-/* bienEtiquetado(nodo(_,[])).*/
-/* bienEtiquetado(nodo(A,[arista(E,nodo(B,L))|XS])):- */
-/*			E is A-B,!*/
-/*			,bienEtiquetado(nodo(B,L))*/
-/*			,!, bienEtiquetado(nodo(A,XS)),!.*/
+esqueleto2Auxiliar(1,_,[[0]]).
+/*esqueleto2Auxiliar(N,R,Niveles):-*/
 
 
-/* Casos de prueba*/
-/* bienEtiquetado(nodo(5,[])).*/
- 
-/*bienEtiquetado(nodo(4,[arista(1,nodo(2,[]))])).falla*/
+esqueleto2(N,R,esq(Niveles)):-esqueleto2Auxiliar(N,R,Niveles).
 
-/*bienEtiquetadoAuxiliar(nodo(4,[arista(1,nodo(2,[]))]),A,N).falla*/
+raiz(X,R,[[X]]):- generarNumeros(R,Ns), write(Ns),pertenece(X,Ns).
 
-/*bienEtiquetado(nodo(4,[arista(1,nodo(3,[])),arista(2,nodo(2,[])),arista(3,nodo(1,[]))])).*/
+generarNumeros(0,[]):-!.
+generarNumeros(N,[N|Xs]):- N2 is N-1,generarNumeros(N2,Xs).
 
-/*bienEtiquetadoAuxiliar(nodo(4,[arista(1,nodo(3,[])),arista(2,nodo(2,[])),arista(3,nodo(1,[]))]),A,N).*/
+pertenece(X,[X|_]):-!.
+pertenece(X,[_|YS]):- pertenece(X,YS).
 
-/*bienEtiquetado(nodo(8,[arista(1,nodo(7,[arista(4,nodo(3,[])),arista(2,nodo(5,[]))])),arista(2,nodo(7,[]))])).*/
-
-/*bienEtiquetadoAuxiliar(nodo(8,[arista(1,nodo(7,[arista(4,nodo(3,[])),arista(2,nodo(5,[]))])),arista(2,nodo(7,[]))]),A,N).*/
-
-
-/*bienEtiquetado(nodo(10,[arista(2,nodo(8,[arista(3,nodo(5,[arista(1,nodo(4,[]))]))]))])).*/
-
-/*bienEtiquetadoAuxiliar(nodo(10,[arista(2,nodo(8,[arista(3,nodo(5,[arista(1,nodo(4,[]))]))]))]),A,N).*/
