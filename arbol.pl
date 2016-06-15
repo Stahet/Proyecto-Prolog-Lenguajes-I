@@ -34,6 +34,7 @@ bienEtiquetadoAuxiliar(nodo(A,[arista(E,nodo(B,L))|XS]),[E|AristasAcum],NodosAcu
 
 /* PREDICADO BIEN ETIQUETADO */
 
+bienEtiquetado(nodo(1,[])):-!.
 bienEtiquetado(Arbol):-
             bienEtiquetadoAuxiliar(Arbol,Aristas,Nodos),
             noRepetidos(Aristas),
@@ -48,33 +49,28 @@ bienEtiquetado(Arbol):-
 
 /* PREDICADO ESQUELETO */
 
-hijos(_,_,[]).
-hijos(N,R,[X|XS]):- R>=X,hijos(N,R,XS),!.
+nivel(0,_,[]):-!.
+nivel(N,R,[X|XS]):- between(0,R,X),N2 is N-1,nivel(N2,R,XS).
 
-esqueleto(N,_,esq([X|[]])):- lenght(X,L),N is L,sumatoria(X,S), S is 0,!.
-esqueleto(N,R,esq([X|[Y|ZS]])):-
-			hijos(N,R,X),       
-			noCreciente(Y),
-			lenght(Y,L2),
-			sumatoria(X,K),
-			K is L2,
-			lenght(X,L),
-			N2 is N-L,
-			esqueleto(N2,R,esq([Y|ZS])).
+nivelNoCreciente(N,R,Nivel):- nivel(N,R,Nivel),noCreciente(Nivel).
+
+esqueleto(1,_,esq([[0]|[]])):-!.
+esqueleto(N,R,esq([[Raiz]|Niveles])):- between(1,R,Raiz),N2 is N-1,esqueletoAuxiliar(N2,R,[Raiz],Niveles).
+
+esqueletoAuxiliar(0,_,Hijos,[]):-sumatoria(Hijos,Sum),Sum is 0,!.
+esqueletoAuxiliar(N,R,Padres,[Hijos|X]):- 
+			between(1,N,N2),
+			nivelNoCreciente(N2,R,Hijos),
+			lenght(Hijos,LongitudHijos),
+			sumatoria(Padres,SumPadres),
+			SumPadres is LongitudHijos,
+			N3 is N-LongitudHijos,
+			esqueletoAuxiliar(N3,R,Hijos,X).
 
 
-esqueleto2Auxiliar(1,_,[[0]]).
-/*esqueleto2Auxiliar(N,R,Niveles):-*/
+/* PREDICADO ETIQUETAMIENTO */
 
+etiquetamiento(esq([[0]|[]]),nodo(1,[])):-!.
 
-esqueleto2(N,R,esq(Niveles)):-esqueleto2Auxiliar(N,R,Niveles).
-
-raiz(X,R,[[X]]):- generarNumeros(R,Ns), write(Ns),pertenece(X,Ns).
-
-generarNumeros(0,[]):-!.
-generarNumeros(N,[N|Xs]):- N2 is N-1,generarNumeros(N2,Xs).
-
-pertenece(X,[X|_]):-!.
-pertenece(X,[_|YS]):- pertenece(X,YS).
-
+,
 
