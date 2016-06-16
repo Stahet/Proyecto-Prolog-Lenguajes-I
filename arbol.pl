@@ -1,5 +1,12 @@
-
-
+/*
+ * arbol.pl
+ *
+ * Proyecto de Prolog para el curso de Laboratario de Lenguajes de Programacion I
+ *
+ * Autores: Jonnathan Ng 11-10199
+ *          Joel Rivas   11-10866
+ */
+ 
 /* PREDICADOS AUXILIARES */
 
 append([],L,L). 
@@ -25,7 +32,7 @@ maximoLista([X|Xs],X):- maximoLista(Xs,Y), X >=Y.
 maximoLista([X|Xs],Y):- maximoLista(Xs,Y), Y > X.
 
 /* PREDICADO BIEN ETIQUETADO 
- * Esta predicado recibe un un funtor de tipo arbol, y nos dice si esta bien etiquetado 
+ * Esta predicado recibe una estructura de tipo arbol, y nos dice si esta bien etiquetado 
  *
  * bienEtiquetado(+Arbol)
  * @param Arbol estructura de tipo Arbol
@@ -79,18 +86,29 @@ esqueleto(1,_,esq([[0]|[]])):-!.
 esqueleto(N,R,esq([[Raiz]|Niveles])):- between(1,R,Raiz),N2 is N-1,esqueletoAuxiliar(N2,R,[Raiz],Niveles).
 
 /* PREDICADO DESCRIBIR ETIQUETAMIENTO
- * describirEtiquetamiento(+Arbol)
  *
- * Predicado que dado una estructura de tipo arbol, muestra en pantalla 
+ * Predicado que dado una estructura de tipo arbol, muestra en pantalla el valor
+ * Muestra una lista de los nodos con sus padres en orden DFS, seguido del valor 
+ * de la arista correspondiente a los ultimos dos nodos
+ *
+ * Ejemplo: describirEtiquetamiento(nodo(1,[
+ *                   arista(2,nodo(3,[
+ *                               arista(1,nodo(2,[]))
+ *                               ]))])).
+ * Imprime: [1,3,2] 1  |3-2| = 1
+ *          [1,3]   2  |1-3| = 2
+ *          [1]     0   raiz
+ *
+ * describirEtiquetamiento(+Arbol)
  * @param Arbol estructura de tipo arbol
  */
 
 describirEtiquetamiento(Arbol) :- describirEtiquetamiento(Arbol,[],0).
-describirEtiquetamiento(nodo(A,[]),Padres,Arista):- append(Padres,[A],Padres2), print(Padres2), print(Arista).
+describirEtiquetamiento(nodo(A,[]),Padres,Arista):- append(Padres,[A],Padres2), write(Padres2),write(" "), writeln(Arista).
 describirEtiquetamiento(nodo(A,[arista(Arista,nodo(B,L))|XS]),Padres,Arista2):-
             append(Padres,[A],Padres2),
-            describirEtiquetamiento(nodo(B,L),Padres2,Arista),
-            describirEtiquetamiento(nodo(A,XS),Padres,Arista2). /* Exploramos el otro hijo, es necesario conocer el valor de la nueva arista*/
+            describirEtiquetamiento(nodo(B,L),Padres2,Arista), /* Caso recorrido en profundidad*/
+            describirEtiquetamiento(nodo(A,XS),Padres,Arista2). /* Caso otros hijos*/
 
 /* PREDICADO ETIQUETAMIENTO */
 
