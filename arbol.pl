@@ -24,6 +24,12 @@ maximoLista([X],X):-!.
 maximoLista([X|Xs],X):- maximoLista(Xs,Y), X >=Y. 
 maximoLista([X|Xs],Y):- maximoLista(Xs,Y), Y > X.
 
+/* PREDICADO BIEN ETIQUETADO 
+ * Esta predicado recibe un un funtor de tipo arbol, y nos dice si esta bien etiquetado 
+ *
+ * bienEtiquetado(+Arbol)
+ * @param Arbol estructura de tipo Arbol
+ */
 bienEtiquetadoAuxiliar(nodo(A,[]),[],[A]):-!.
 bienEtiquetadoAuxiliar(nodo(A,[arista(E,nodo(B,L))|XS]),[E|AristasAcum],NodosAcum):-
             E is abs(A-B),
@@ -31,8 +37,6 @@ bienEtiquetadoAuxiliar(nodo(A,[arista(E,nodo(B,L))|XS]),[E|AristasAcum],NodosAcu
             bienEtiquetadoAuxiliar(nodo(A,XS),Aristas1,Nodos1),
             append(Aristas,Aristas1,AristasAcum),
             append(Nodos,Nodos1,NodosAcum).
-
-/* PREDICADO BIEN ETIQUETADO */
 
 bienEtiquetado(nodo(1,[])):-!.
 bienEtiquetado(Arbol):-
@@ -47,26 +51,46 @@ bienEtiquetado(Arbol):-
             MaxDeNodos is LongitudNodos.
 
 
-/* PREDICADO ESQUELETO */
+/* PREDICADO ESQUELETO 
+ * 
+ * esqueleto(+N,+R,-esqueleto)
+ * @param N numero de nodos
+ * @param R cantidad maxima de hijos para un cierto nodo
+ * @param esqueleto estructura de tipo esqueleto     
+ */
+
 
 nivel(0,_,[]):-!.
 nivel(N,R,[X|XS]):- between(0,R,X),N2 is N-1,nivel(N2,R,XS).
 
 nivelNoCreciente(N,R,Nivel):- nivel(N,R,Nivel),noCreciente(Nivel).
 
+esqueletoAuxiliar(0,_,Hijos,[]):-sumatoria(Hijos,Sum),Sum is 0,!.
+esqueletoAuxiliar(N,R,Padres,[Hijos|X]):- 
+                  between(1,N,N2),
+                  nivelNoCreciente(N2,R,Hijos),
+                  lenght(Hijos,LongitudHijos),
+                  sumatoria(Padres,SumPadres),
+                  SumPadres is LongitudHijos,
+                  N3 is N-LongitudHijos,
+                  esqueletoAuxiliar(N3,R,Hijos,X).
+
 esqueleto(1,_,esq([[0]|[]])):-!.
 esqueleto(N,R,esq([[Raiz]|Niveles])):- between(1,R,Raiz),N2 is N-1,esqueletoAuxiliar(N2,R,[Raiz],Niveles).
 
-esqueletoAuxiliar(0,_,Hijos,[]):-sumatoria(Hijos,Sum),Sum is 0,!.
-esqueletoAuxiliar(N,R,Padres,[Hijos|X]):- 
-			between(1,N,N2),
-			nivelNoCreciente(N2,R,Hijos),
-			lenght(Hijos,LongitudHijos),
-			sumatoria(Padres,SumPadres),
-			SumPadres is LongitudHijos,
-			N3 is N-LongitudHijos,
-			esqueletoAuxiliar(N3,R,Hijos,X).
+/* PREDICADO DESCRIBIR ETIQUETAMIENTO
+ * describirEtiquetamiento(+Arbol)
+ *
+ * Predicado que dado una estructura de tipo arbol, muestra en pantalla 
+ * @param Arbol estructura de tipo arbol
+ */
 
+describirEtiquetamiento(Arbol) :- describirEtiquetamiento(Arbol,[],0).
+describirEtiquetamiento(nodo(A,[]),Padres,Arista):- append(Padres,[A],Padres2), print(Padres2), print(Arista).
+describirEtiquetamiento(nodo(A,[arista(Arista,nodo(B,L))|XS]),Padres,Arista2):-
+            append(Padres,[A],Padres2),
+            describirEtiquetamiento(nodo(B,L),Padres2,Arista),
+            describirEtiquetamiento(nodo(A,XS),Padres,Arista2). /* Exploramos el otro hijo, es necesario conocer el valor de la nueva arista*/
 
 /* PREDICADO ETIQUETAMIENTO */
 

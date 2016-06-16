@@ -5,7 +5,14 @@ bienEtiquetado(nodo(4,[arista(1,nodo(2,[]))]))./*falla*/
 
 bienEtiquetadoAuxiliar(nodo(4,[arista(1,nodo(2,[]))]),A,N). /*falla*/
 
+
 bienEtiquetado(nodo(4,[
+                    arista(1,nodo(3,[])),
+                    arista(2,nodo(2,[])),
+                    arista(3,nodo(1,[]))
+                ])).
+
+describirEtiquetamiento(nodo(4,[
                     arista(1,nodo(3,[])),
                     arista(2,nodo(2,[])),
                     arista(3,nodo(1,[]))
@@ -23,7 +30,7 @@ bienEtiquetado(nodo(8,[
                                 arista(2,nodo(5,[]))
                                 ])),
                     arista(2,nodo(7,[]))
-                    ])).
+                    ])). /*Falla*/
 
 bienEtiquetado(nodo(1,[
                     arista(1,nodo(2,[
@@ -35,6 +42,14 @@ bienEtiquetado(nodo(1,[
 
 
 bienEtiquetado(nodo(1,[
+                    arista(2,nodo(3,[
+                                arista(1,nodo(2,[]))
+                                ])),
+                    arista(3,nodo(4,[])),
+                    arista(4,nodo(5,[]))
+                    ])).
+
+describirEtiquetamiento(nodo(1,[
                     arista(2,nodo(3,[
                                 arista(1,nodo(2,[]))
                                 ])),
@@ -68,3 +83,5 @@ bienEtiquetadoAuxiliar(nodo(10,[
                                         ]))
                                     ]))
                             ]),A,N).
+
+esqueleto(5,[[3],[1,0,0],[0]]).
