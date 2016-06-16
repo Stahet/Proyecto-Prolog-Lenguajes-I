@@ -71,6 +71,3 @@ esqueletoAuxiliar(N,R,Padres,[Hijos|X]):-
 /* PREDICADO ETIQUETAMIENTO */
 
 etiquetamiento(esq([[0]|[]]),nodo(1,[])):-!.
-
-,
-
